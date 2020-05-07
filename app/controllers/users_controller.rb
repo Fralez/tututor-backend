@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
+# Users controller
 class UsersController < ApplicationController
+  protect_from_forgery
+
   def create
     @user = User.new(user_params)
     if @user.save
@@ -13,7 +18,7 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :email, :password, :password_confirmation, :identity_number, :name,, :gender, :birth_date
+      :email, :password, :password_confirmation, :identity_number, :name, :gender, :birth_date
     )
   end
 end
