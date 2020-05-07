@@ -3,6 +3,10 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def not_found
+    render json: { errors: 'Not found' }, status: :not_found
+  end
+
   def authorize_request
     header = request.headers['Authorization']
     header = header.split(' ').last if header
