@@ -45,5 +45,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'dotenv-rails', groups: [:development, :test]
 # Devise auth
 gem 'devise'
-# Simple token auth
-gem 'simple_token_authentication', '~> 1.0'
+# JWT
+gem 'jwt'
+# CORS support
+gem 'rack-cors'

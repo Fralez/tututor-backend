@@ -2,6 +2,7 @@
 
 # Users controller
 class UsersController < ApplicationController
+  before_action :authorize_request, except: [:create]
   protect_from_forgery
 
   def create
@@ -18,7 +19,8 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :email, :password, :password_confirmation, :identity_number, :name, :gender, :birth_date
+      :email, :password, :password_confirmation, :identity_number, :name,
+      :gender, :birth_date
     )
   end
 end
