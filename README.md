@@ -11,8 +11,8 @@ Firstly you must create an `.env` file starting from the `.env.sample` already i
 git clone https://github.com/Fralez/tututor-backend.git && cd tututor-backend/
 # Install gems
 bundle install
-# Set up DB
-rails db:setup
+# Create DB
+rails db:create
 # Run migrations
 rails db:migrate
 # Run seeds (if any)
@@ -27,4 +27,6 @@ Useful commands:
 rails db:drop
 # Access to rails server console
 rails console
+# Access to rails server console without impactful changes
+rails console --sandbox
 ```
