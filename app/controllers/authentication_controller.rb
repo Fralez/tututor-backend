@@ -2,7 +2,7 @@
 
 # Authentication controller
 class AuthenticationController < ApplicationController
-  before_action :authenticate_user!, except: [:login]
+  before_action :authorize_request, except: [:login]
   protect_from_forgery
 
   def login
@@ -12,15 +12,13 @@ class AuthenticationController < ApplicationController
                      exp: DateTime.current + 24.hours,
                      email: @user.email }, status: :ok
     else
-      render json: { error: 'unauthorized',
-                     valid_email: !@user.nil? },
-             status: :unauthorized
+      render json: { error: 'unauthorized' }, status: :unauthorized
     end
   end
 
-  private
-
-  def login_params
-    params.permit(:email, :password)
+  def renew
+    @token = request.headers['Authorization'].split(' ').last
+    token_data = JsonWebToken.renew @token
+    render json: token_data
   end
 end

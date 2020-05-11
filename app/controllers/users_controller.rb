@@ -21,8 +21,14 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+
     if @user.save
-      render json: @user, status: :created
+      render json: { user: @user,
+                     token: JsonWebToken.encode(user_id: @user.id) },
+             status: :created
+    elsif User.exists?(email: @user.email) || User.exists?(identity_number: @user.identity_number)
+      render json: { errors: 'email or identity_number already registered' },
+             status: :bad_request
     else
       render json: { errors: @user.errors.full_messages },
              status: :unprocessable_entity
