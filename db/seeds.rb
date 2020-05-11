@@ -9,7 +9,6 @@ if Rails.env.development?
     admin.gender = 0
     admin.birth_date = DateTime.civil_from_format :local, 2007, 07, 07
     admin.password = 'password'
-    admin.password_confirmation = 'password'
     admin.admin = true
   end
 end
