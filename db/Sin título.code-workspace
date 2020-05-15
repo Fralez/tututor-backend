@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../myfirstapp"
+		},
+		{
+			"path": "../../tututor-client"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"editor.tabSize": 2
+	}
+}
