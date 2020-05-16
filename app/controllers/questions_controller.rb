@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authorize_request
+  before_action :authorize_request, except: [:index, :show]
 
   def index 
     @questions = Question.all
