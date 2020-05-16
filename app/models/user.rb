@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
   enum gender: { other: 0, male: 1, female: 2 }
 
+  has_many :questions
+
   validates :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :identity_number, presence: true

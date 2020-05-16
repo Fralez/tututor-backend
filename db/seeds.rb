@@ -12,5 +12,3 @@ if Rails.env.development?
     admin.admin = true
   end
 end
-
-Question.create(title: "How can i do a question?", description: "Question body ....")
