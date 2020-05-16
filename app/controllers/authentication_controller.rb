@@ -3,7 +3,6 @@
 # Authentication controller
 class AuthenticationController < ApplicationController
   before_action :authorize_request, except: [:login]
-  protect_from_forgery
 
   def login
     @user = User.where(email: params[:email]).first
