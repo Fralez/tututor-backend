@@ -30,6 +30,15 @@ class QuestionsController < ApplicationController
     end 
   end
 
+  def vote_question
+    @question = Question.find_by(id: params[:id])
+    new_vote = params[:vote]
+
+    @question.update!(votes: @question.votes + new_vote)
+    render json: { question: @question.as_json(except: %i[created_at updated_at]) },
+           status: :created
+  end
+
   private
 
   def question_params
