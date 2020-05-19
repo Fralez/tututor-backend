@@ -12,7 +12,10 @@ class QuestionsController < ApplicationController
     @question = Question.find_by(id: params[:id])
 
     if @question
-      render json: { question: @question.as_json(except: %i[created_at updated_at]) }, status: :ok
+      render json: { question: @question.as_json(except: %i[created_at updated_at user_id])
+                                        .merge(creator: User.find(@question.user_id)
+                                        .as_json(except: %i[created_at updated_at])) },
+             status: :ok
     else
       not_found
     end
