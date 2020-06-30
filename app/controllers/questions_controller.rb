@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
-  before_action :authorize_request, except: [:index, :show]
+  before_action :authorize_request, except: %i[index show search_question]
 
   def index
-    @questions = Question.all.map{ |q| q.attributes.merge({ creator: q.creator }) }
+    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator }) }
 
     render json: @questions.as_json,
            status: :ok
@@ -30,7 +30,7 @@ class QuestionsController < ApplicationController
     else
       render json: { errors: @question.errors.full_messages },
              status: :unprocessable_entity
-    end 
+    end
   end
 
   def vote_question
@@ -40,6 +40,13 @@ class QuestionsController < ApplicationController
     @question.update!(votes: @question.votes + new_vote)
     render json: { question: @question.as_json },
            status: :created
+  end
+
+  def search_question
+    q = params[:q]
+    @questions = Question.where('title ILIKE ?', "%#{q}%")
+    render json: { questions: @questions.as_json },
+           status: :ok
   end
 
   private
