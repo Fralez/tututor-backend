@@ -11,20 +11,10 @@ class QuestionsController < ApplicationController
   def show
     @question = Question.find_by(id: params[:id])
 
-    @current_user = get_current_user
-
-    user_vars = nil
-    if @current_user.present?
-      user_vars = {
-        has_voted: UserQuestionVote.where(user_id: @current_user.id, question_id: @question.id).last.present?,
-        has_saved_question: UserSavedQuestion.where(user_id: @current_user.id, question_id: @question.id).last.present?
-      }
-    end
-
     if @question
       render json: { question: @question.as_json
                                         .merge(creator: @question.creator
-                                        .as_json, votes: @question.votes.as_json, user_vars: user_vars ) },
+                                        .as_json, votes: @question.votes.as_json ) },
              status: :ok
     else
       not_found
