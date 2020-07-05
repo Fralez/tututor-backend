@@ -2,10 +2,7 @@
 
 # User model
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  has_secure_password
 
   enum gender: { other: 0, male: 1, female: 2 }
 
