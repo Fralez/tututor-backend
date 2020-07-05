@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_16_195734) do
+ActiveRecord::Schema.define(version: 2020_07_05_023924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,11 +18,25 @@ ActiveRecord::Schema.define(version: 2020_05_16_195734) do
   create_table "questions", force: :cascade do |t|
     t.string "title", null: false
     t.string "description", null: false
-    t.integer "votes", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_questions_on_user_id"
+  end
+
+  create_table "user_question_votes", force: :cascade do |t|
+    t.boolean "negative", null: false
+    t.bigint "user_id", null: false
+    t.bigint "question_id", null: false
+    t.index ["question_id"], name: "index_user_question_votes_on_question_id"
+    t.index ["user_id"], name: "index_user_question_votes_on_user_id"
+  end
+
+  create_table "user_saved_questions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "question_id", null: false
+    t.index ["question_id"], name: "index_user_saved_questions_on_question_id"
+    t.index ["user_id"], name: "index_user_saved_questions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -46,4 +60,8 @@ ActiveRecord::Schema.define(version: 2020_05_16_195734) do
   end
 
   add_foreign_key "questions", "users"
+  add_foreign_key "user_question_votes", "questions"
+  add_foreign_key "user_question_votes", "users"
+  add_foreign_key "user_saved_questions", "questions"
+  add_foreign_key "user_saved_questions", "users"
 end

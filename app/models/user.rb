@@ -9,7 +9,13 @@ class User < ApplicationRecord
 
   enum gender: { other: 0, male: 1, female: 2 }
 
-  has_many :questions
+  has_many :questions # This are the user created questions
+
+  has_many :user_saved_questions
+  has_many :questions, through: :user_saved_questions
+
+  has_many :user_question_votes
+  has_many :questions, through: :user_question_votes
 
   validates :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

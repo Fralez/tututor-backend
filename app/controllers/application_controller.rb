@@ -20,6 +20,19 @@ class ApplicationController < ActionController::Base
       render json: { errors: e.message }, status: :unauthorized
     end
   end
+
+  def get_current_user
+    header = request.headers['Authorization']
+    header = header.split(' ').last if header
+
+    @current_user = nil
+    if header
+      @decoded = JsonWebToken.decode(header)
+      @current_user = User.find(@decoded[:user_id]) 
+    end
+
+    @current_user
+  end
   
   protected
 
