@@ -2,8 +2,6 @@
 
 # Users controller
 class UsersController < ApplicationController
-  before_action :authorize_request, except: [:create]
-
   def index
     render json: User.all.as_json(except: %i[created_at updated_at]), status: :ok
   end
@@ -22,8 +20,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: { user: @user.as_json(except: %i[created_at updated_at]),
-                     token: JsonWebToken.encode(user_id: @user.id) },
+      render json: { user: @user.as_json(except: %i[created_at updated_at]) },
              status: :created
     elsif User.exists?(email: @user.email) || User.exists?(identity_number: @user.identity_number)
       render json: { errors: 'email or identity_number already registered' },
