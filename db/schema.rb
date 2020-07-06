@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_16_195734) do
+ActiveRecord::Schema.define(version: 2020_07_06_165807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "category_to_questions", force: :cascade do |t|
+    t.bigint "question_category_id", null: false
+    t.bigint "question_id", null: false
+    t.index ["question_category_id"], name: "index_category_to_questions_on_question_category_id"
+    t.index ["question_id"], name: "index_category_to_questions_on_question_id"
+  end
+
+  create_table "question_categories", force: :cascade do |t|
+    t.string "title", null: false
+  end
 
   create_table "questions", force: :cascade do |t|
     t.string "title", null: false
@@ -45,5 +56,7 @@ ActiveRecord::Schema.define(version: 2020_05_16_195734) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "category_to_questions", "question_categories"
+  add_foreign_key "category_to_questions", "questions"
   add_foreign_key "questions", "users"
 end
