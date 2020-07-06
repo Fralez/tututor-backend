@@ -9,6 +9,6 @@ Rails.application.routes.draw do
   get '/search/questions', to: 'questions#search_question'
 
   resources :sessions, only: %i[create]
-  get '/sessions/logged-in', to: 'sessions#logged_in'
+  get '/sessions/logged_in', to: 'sessions#logged_in'
   delete '/sessions/logout', to: 'sessions#logout'
 end

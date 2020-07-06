@@ -31,16 +31,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # @current_user = get_current_user
-
-  # user_vars = nil
-  # if @current_user.present?
-  #   user_vars = {
-  #     has_voted: UserQuestionVote.where(user_id: @current_user.id, question_id: @question.id).last.present?,
-  #     has_saved_question: UserSavedQuestion.where(user_id: @current_user.id, question_id: @question.id).last.present?
-  #   }
-  # end
-
   private
 
   def user_params

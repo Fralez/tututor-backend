@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  include CurrentUserConcern
+
   def index
     @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator }) }
 
@@ -10,9 +12,20 @@ class QuestionsController < ApplicationController
     @question = Question.find_by(id: params[:id])
 
     if @question
+      user_vars = {
+        vote: nil,
+        is_saved: false
+      }
+      if @current_user
+        user_vars = {
+          vote: UserQuestionVote.where(user_id: @current_user.id, question_id: @question.id).last,
+          is_saved: UserSavedQuestion.where(user_id: @current_user.id, question_id: @question.id).last.present?
+        } 
+      end
+
       render json: { question: @question.as_json
                                         .merge(creator: @question.creator
-                                        .as_json, votes: @question.votes.as_json ) },
+                                        .as_json, votes: @question.votes.as_json, user_vars: user_vars ) },
              status: :ok
     else
       not_found
@@ -38,20 +51,18 @@ class QuestionsController < ApplicationController
 
   def vote_question
     if @current_user
-      user = User.find params[:user_id]
       question = Question.find params[:question_id]
-  
+
       # If there already exists a saved record, delete it
-      @user_question_vote = UserQuestionVote.where(user_id: params[:user_id], question_id: params[:question_id]).last
-  
+      @user_question_vote = UserQuestionVote.where(user_id: @current_user.id, question_id: params[:question_id]).last
+
       if @user_question_vote.present?
         @user_question_vote.destroy
-  
+
         render json: { votes: question.votes },
                  status: :ok
       else
-        @user_question_vote = UserQuestionVote.new(user: user, question: question, negative: params[:negative])
-  
+        @user_question_vote = UserQuestionVote.new(user: @current_user, question: question, negative: params[:negative])
         if @user_question_vote.save
           render json: { votes: question.votes },
                  status: :created
@@ -67,20 +78,19 @@ class QuestionsController < ApplicationController
 
   def save_question
     if @current_user
-      user = User.find params[:user_id]
       question = Question.find params[:question_id]
-  
+
       # If there already exists a saved record, delete it
-      @user_saved_question = UserSavedQuestion.where(user_id: params[:user_id], question_id: params[:question_id]).last
-  
+      @user_saved_question = UserSavedQuestion.where(user_id: @current_user.id, question_id: params[:question_id]).last
+
       if @user_saved_question.present?
         @user_saved_question.destroy
-  
+
         render json: { hasUnsaved: true }, 
                status: :ok
       else
-        @user_saved_question = UserSavedQuestion.new(user: user, question: question)
-  
+        @user_saved_question = UserSavedQuestion.new(user: @current_user, question: question)
+
         if @user_saved_question.save
           render json: { user_saved_question: @user_saved_question },
                  status: :created
