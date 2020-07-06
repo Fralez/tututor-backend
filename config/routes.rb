@@ -9,5 +9,5 @@ Rails.application.routes.draw do
   post '/auth/login', to: 'authentication#login'
   post '/auth/renew', to: 'authentication#renew'
 
-  post '/categories', to: 'categories#create'
+  resources :categories, only: %i[create]
 end
