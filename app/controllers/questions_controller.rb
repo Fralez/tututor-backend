@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   include CurrentUserConcern
 
   def index
-    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator }) }
+    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator, votes: q.votes }) }
 
     render json: @questions.as_json,
            status: :ok
