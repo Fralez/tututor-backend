@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2020_07_06_215845) do
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
-  
+
   create_table "category_to_questions", force: :cascade do |t|
     t.bigint "question_category_id", null: false
     t.bigint "question_id", null: false

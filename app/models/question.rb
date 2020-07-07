@@ -13,7 +13,7 @@ class Question < ApplicationRecord
 
   has_many :category_to_questions
   has_many :categories, through: :category_to_questions
-  
+
   has_many :answers
 
   validates :title, presence: true
@@ -28,5 +28,14 @@ class Question < ApplicationRecord
     downvotes = UserQuestionVote.where(question_id: id, negative: true).length
 
     upvotes - downvotes
+  end
+
+  def category
+    category = CategoryToQuestion.where(question_id: id).first
+
+    return unless category
+
+    category_id = category.question_category_id
+    QuestionCategory.find category_id
   end
 end

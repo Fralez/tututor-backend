@@ -1,4 +1,4 @@
 class CategoryToQuestion < ApplicationRecord
-    belongs_to :category
-    belongs_to :question
+  belongs_to :question_category
+  belongs_to :question
 end
