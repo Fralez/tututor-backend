@@ -25,6 +25,8 @@ Useful commands:
 ```bash
 # Eliminate completely database
 rails db:drop
+# Undo a genertion command (migration)
+rails db:rollback STEP=<amount_of_migrations_to_rollback>
 # Access to rails server console
 rails console
 # Access to rails server console without impactful changes
