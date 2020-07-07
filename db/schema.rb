@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 2020_07_06_215845) do
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
+  create_table "category_to_questions", force: :cascade do |t|
+    t.bigint "question_category_id", null: false
+    t.bigint "question_id", null: false
+    t.index ["question_category_id"], name: "index_category_to_questions_on_question_category_id"
+    t.index ["question_id"], name: "index_category_to_questions_on_question_id"
+  end
+
+  create_table "question_categories", force: :cascade do |t|
+    t.string "title", null: false
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "title", null: false
     t.string "description", null: false
@@ -75,6 +86,8 @@ ActiveRecord::Schema.define(version: 2020_07_06_215845) do
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
+  add_foreign_key "category_to_questions", "question_categories"
+  add_foreign_key "category_to_questions", "questions"
   add_foreign_key "questions", "users"
   add_foreign_key "user_answer_votes", "answers"
   add_foreign_key "user_answer_votes", "users"

@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   include CurrentUserConcern
 
   def index
-    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator, votes: q.votes }) }
+    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator, votes: q.votes, category: q.category.as_json }) }
 
     render json: @questions.as_json,
            status: :ok
@@ -25,7 +25,8 @@ class QuestionsController < ApplicationController
 
       render json: { question: @question.as_json
                                         .merge(creator: @question.creator
-                                        .as_json, votes: @question.votes.as_json, user_vars: user_vars ) },
+                                        .as_json, votes: @question.votes.as_json, user_vars: user_vars,
+                                        category: @question.category.as_json ) },
              status: :ok
     else
       not_found
@@ -37,7 +38,12 @@ class QuestionsController < ApplicationController
       @question = Question.new(question_params.merge(user_id: @current_user.id))
 
       if @question.save
-        render json: { question: @question.as_json },
+        category = QuestionCategory.where(title: params[:question][:category]).last
+        if category
+          CategoryToQuestion.create!(question_category_id: category.id, question_id: @question.id)
+        end
+
+        render json: { question: @question.as_json, category: @question.category.as_json },
               status: :created
       else
         render json: { errors: @question.errors.full_messages },

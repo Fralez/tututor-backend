@@ -12,3 +12,14 @@ if Rails.env.development?
     admin.admin = true
   end
 end
+
+# Create categories
+QuestionCategory.create!(title: "Matemáticas")
+QuestionCategory.create!(title: "Ciencias Sociales")
+QuestionCategory.create!(title: "Historia")
+QuestionCategory.create!(title: "Geografía")
+QuestionCategory.create!(title: "Administración")
+QuestionCategory.create!(title: "TIC")
+QuestionCategory.create!(title: "Biología")
+QuestionCategory.create!(title: "Derecho")
+QuestionCategory.create!(title: "Lengua")
