@@ -3,12 +3,17 @@ class Question < ApplicationRecord
 
   belongs_to :user
 
+  default_scope { order(created_at: :asc) }
+
   has_many :user_saved_questions
   has_many :users, through: :user_saved_questions
 
   has_many :user_question_votes
   has_many :users, through: :user_question_votes
 
+  has_many :category_to_questions
+  has_many :categories, through: :category_to_questions
+  
   has_many :answers
 
   validates :title, presence: true

@@ -14,4 +14,6 @@ Rails.application.routes.draw do
 
   resources :answers, only: %i[index show create]
   post '/answers/vote', to: 'answers#vote_answer'
+  
+  resources :categories, only: %i[create]
 end
