@@ -15,6 +15,7 @@ class Question < ApplicationRecord
   has_many :categories, through: :category_to_questions
 
   has_many :answers
+  has_one :correct_answer, class_name: "Answer", foreign_key: "answer_id"
 
   validates :title, presence: true
   validates :description, presence: true
@@ -37,5 +38,11 @@ class Question < ApplicationRecord
 
     category_id = category.question_category_id
     QuestionCategory.find category_id
+  end
+
+  def correct_answer
+    return unless correct_answer_id
+
+    Answer.find correct_answer_id
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   include CurrentUserConcern
 
@@ -20,13 +22,13 @@ class QuestionsController < ApplicationController
         user_vars = {
           vote: UserQuestionVote.where(user_id: @current_user.id, question_id: @question.id).last,
           is_saved: UserSavedQuestion.where(user_id: @current_user.id, question_id: @question.id).last.present?
-        } 
+        }
       end
 
       render json: { question: @question.as_json
                                         .merge(creator: @question.creator
                                         .as_json, votes: @question.votes.as_json, user_vars: user_vars,
-                                        category: @question.category.as_json ) },
+                                               category: @question.category.as_json) },
              status: :ok
     else
       not_found
@@ -44,16 +46,15 @@ class QuestionsController < ApplicationController
         end
 
         render json: { question: @question.as_json, category: @question.category.as_json },
-              status: :created
+               status: :created
       else
         render json: { errors: @question.errors.full_messages },
-              status: :unprocessable_entity
+               status: :unprocessable_entity
       end
     else
       render json: { error: 'unauthorized' }, status: :unauthorized
     end
   end
-
 
   def vote_question
     if @current_user
@@ -66,7 +67,7 @@ class QuestionsController < ApplicationController
         @user_question_vote.destroy
 
         render json: { votes: question.votes },
-                 status: :ok
+               status: :ok
       else
         @user_question_vote = UserQuestionVote.new(user: @current_user, question: question, negative: params[:negative])
         if @user_question_vote.save
@@ -92,7 +93,7 @@ class QuestionsController < ApplicationController
       if @user_saved_question.present?
         @user_saved_question.destroy
 
-        render json: { hasUnsaved: true }, 
+        render json: { hasUnsaved: true },
                status: :ok
       else
         @user_saved_question = UserSavedQuestion.new(user: @current_user, question: question)
@@ -115,6 +116,27 @@ class QuestionsController < ApplicationController
     @questions = Question.where('title ILIKE ?', "%#{q}%")
     render json: { questions: @questions.as_json },
            status: :ok
+  end
+
+  def mark_correct_answer
+    if @current_user
+      question = Question.find params[:question_id]
+
+      question.update!(correct_answer_id: params[:correct_answer_id])
+
+      if question.correct_answer
+        render json: { correct_answer: question.correct_answer },
+               status: :created
+      elsif params[:correct_answer_id].blank?
+        render json: { correct_answer: nil, unmarked: true },
+               status: :created
+      else
+        render json: { errors: 'unprocessable_entity' },
+               status: :unprocessable_entity
+      end
+    else
+      render json: { error: 'unauthorized' }, status: :unauthorized
+    end
   end
 
   private
