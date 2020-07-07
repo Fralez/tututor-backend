@@ -14,6 +14,9 @@ class User < ApplicationRecord
   has_many :user_question_votes
   has_many :questions, through: :user_question_votes
 
+  has_many :user_answer_votes
+  has_many :answers, through: :user_answer_votes
+
   validates :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :identity_number, presence: true

@@ -11,4 +11,7 @@ Rails.application.routes.draw do
   resources :sessions, only: %i[create]
   get '/sessions/logged_in', to: 'sessions#logged_in'
   delete '/sessions/logout', to: 'sessions#logout'
+
+  resources :answers, only: %i[index show create]
+  post '/answers/vote', to: 'answers#vote_answer'
 end
