@@ -4,7 +4,9 @@ class QuestionsController < ApplicationController
   include CurrentUserConcern
 
   def index
-    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator, votes: q.votes, category: q.category.as_json }) }
+    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator, votes: q.votes,
+                                                             category: q.category.as_json,
+                                                             correct_answer: q.correct_answer.as_json }) }
 
     render json: @questions.as_json,
            status: :ok
@@ -28,7 +30,8 @@ class QuestionsController < ApplicationController
       render json: { question: @question.as_json
                                         .merge(creator: @question.creator
                                         .as_json, votes: @question.votes.as_json, user_vars: user_vars,
-                                               category: @question.category.as_json) },
+                                               category: @question.category.as_json,
+                                               correct_answer: @question.correct_answer.as_json) },
              status: :ok
     else
       not_found
@@ -122,17 +125,22 @@ class QuestionsController < ApplicationController
     if @current_user
       question = Question.find params[:question_id]
 
-      question.update!(correct_answer_id: params[:correct_answer_id])
-
-      if question.correct_answer
-        render json: { correct_answer: question.correct_answer },
-               status: :created
-      elsif params[:correct_answer_id].blank?
+      # Unmark correct answer case
+      if question.correct_answer_id == params[:correct_answer_id]
+        question.update!(correct_answer_id: nil)
         render json: { correct_answer: nil, unmarked: true },
                status: :created
       else
-        render json: { errors: 'unprocessable_entity' },
-               status: :unprocessable_entity
+
+        question.update!(correct_answer_id: params[:correct_answer_id])
+
+        if question.correct_answer
+          render json: { correct_answer: question.correct_answer },
+                status: :created
+        else
+          render json: { errors: 'unprocessable_entity' },
+                status: :unprocessable_entity
+        end
       end
     else
       render json: { error: 'unauthorized' }, status: :unauthorized

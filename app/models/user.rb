@@ -8,13 +8,13 @@ class User < ApplicationRecord
 
   has_many :questions # This are the user created questions
 
-  has_many :user_saved_questions
+  has_many :user_saved_questions, dependent: :destroy
   has_many :questions, through: :user_saved_questions
 
-  has_many :user_question_votes
+  has_many :user_question_votes, dependent: :destroy
   has_many :questions, through: :user_question_votes
 
-  has_many :user_answer_votes
+  has_many :user_answer_votes, dependent: :destroy
   has_many :answers, through: :user_answer_votes
 
   validates :email, presence: true

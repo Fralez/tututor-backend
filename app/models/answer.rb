@@ -1,7 +1,7 @@
 class Answer < ApplicationRecord
   belongs_to :question
 
-  has_many :user_answer_votes
+  has_many :user_answer_votes, dependent: :destroy
   has_many :users, through: :user_answer_votes
 
   validates :description, presence: true

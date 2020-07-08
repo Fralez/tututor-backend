@@ -5,16 +5,16 @@ class Question < ApplicationRecord
 
   default_scope { order(created_at: :asc) }
 
-  has_many :user_saved_questions
+  has_many :user_saved_questions, dependent: :destroy
   has_many :users, through: :user_saved_questions
 
-  has_many :user_question_votes
+  has_many :user_question_votes, dependent: :destroy
   has_many :users, through: :user_question_votes
 
-  has_many :category_to_questions
+  has_many :category_to_questions, dependent: :destroy
   has_many :categories, through: :category_to_questions
 
-  has_many :answers
+  has_many :answers, dependent: :destroy
   has_one :correct_answer, class_name: "Answer", foreign_key: "answer_id"
 
   validates :title, presence: true
