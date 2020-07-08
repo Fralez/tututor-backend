@@ -4,9 +4,25 @@ class QuestionsController < ApplicationController
   include CurrentUserConcern
 
   def index
-    @questions = Question.all.map { |q| q.attributes.merge({ creator: q.creator, votes: q.votes,
-                                                             category: q.category.as_json,
-                                                             correct_answer: q.correct_answer.as_json }) }
+    @questions = Question.all.map do |q|
+
+      user_vote = nil
+      if @current_user
+        user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: q.correct_answer_id).last
+      end
+
+      correct_answer_serialized = nil
+      if q.correct_answer
+        correct_answer_serialized = q.correct_answer.attributes.merge({ 
+          creator: q.correct_answer.creator.as_json, 
+          votes: q.correct_answer.votes.as_json, 
+          user_vote: user_vote.as_json })
+      end
+
+      q.attributes.merge({ creator: q.creator, votes: q.votes,
+        category: q.category.as_json,
+        correct_answer: correct_answer_serialized })
+    end
 
     render json: @questions.as_json,
            status: :ok
@@ -27,11 +43,24 @@ class QuestionsController < ApplicationController
         }
       end
 
+      user_vote = nil
+      if @current_user
+        user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: @question.correct_answer_id).last
+      end
+
+      correct_answer_serialized = nil
+      if @question.correct_answer
+        correct_answer_serialized = @question.correct_answer.attributes.merge({ 
+          creator: @question.correct_answer.creator.as_json, 
+          votes: @question.correct_answer.votes.as_json, 
+          user_vote: user_vote.as_json })
+      end
+
       render json: { question: @question.as_json
                                         .merge(creator: @question.creator
                                         .as_json, votes: @question.votes.as_json, user_vars: user_vars,
                                                category: @question.category.as_json,
-                                               correct_answer: @question.correct_answer.as_json) },
+                                               correct_answer: correct_answer_serialized ) },
              status: :ok
     else
       not_found
@@ -134,8 +163,12 @@ class QuestionsController < ApplicationController
 
         question.update!(correct_answer_id: params[:correct_answer_id])
 
+        user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: question.correct_answer_id).last
+
         if question.correct_answer
-          render json: { correct_answer: question.correct_answer },
+          render json: { correct_answer: question.correct_answer.attributes.merge({ 
+            creator: question.correct_answer.creator.as_json, votes: question.correct_answer.votes.as_json, user_vote: user_vote.as_json })
+          },
                 status: :created
         else
           render json: { errors: 'unprocessable_entity' },

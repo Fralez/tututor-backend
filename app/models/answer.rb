@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  default_scope { order(created_at: :desc) }
+
   belongs_to :question
 
   has_many :user_answer_votes, dependent: :destroy

@@ -21,14 +21,14 @@ class AnswersController < ApplicationController
     @answer = Answer.find_by(id: params[:id])
 
     if @answer
-      vote = nil
+      user_vote = nil
       if @current_user
-        vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: @answer.id).last
+        user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: @answer.id).last
       end
 
       render json: { answer: @answer.as_json
                                         .merge(creator: @answer.creator
-                                        .as_json, votes: @answer.votes.as_json, vote: vote ) },
+                                        .as_json, votes: @answer.votes.as_json, user_vote: user_vote ) },
              status: :ok
     else
       not_found
