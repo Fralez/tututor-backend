@@ -1,9 +1,5 @@
 class Question < ApplicationRecord
-  default_scope { order(created_at: :desc) }
-
   belongs_to :user
-
-  default_scope { order(created_at: :asc) }
 
   has_many :user_saved_questions, dependent: :destroy
   has_many :users, through: :user_saved_questions
