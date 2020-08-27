@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_07_172132) do
+ActiveRecord::Schema.define(version: 2020_08_27_161234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,22 @@ ActiveRecord::Schema.define(version: 2020_07_07_172132) do
     t.bigint "question_id", null: false
     t.index ["question_category_id"], name: "index_category_to_questions_on_question_category_id"
     t.index ["question_id"], name: "index_category_to_questions_on_question_id"
+  end
+
+  create_table "channels", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.bigint "users_id", null: false
+    t.bigint "messages_id"
+    t.index ["messages_id"], name: "index_channels_on_messages_id"
+    t.index ["users_id"], name: "index_channels_on_users_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content", null: false
+    t.bigint "user_id", null: false
+    t.bigint "channel_id", null: false
+    t.index ["channel_id"], name: "index_messages_on_channel_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "question_categories", force: :cascade do |t|
@@ -82,14 +98,20 @@ ActiveRecord::Schema.define(version: 2020_07_07_172132) do
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "messages_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["identity_number"], name: "index_users_on_identity_number", unique: true
+    t.index ["messages_id"], name: "index_users_on_messages_id"
   end
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
   add_foreign_key "category_to_questions", "question_categories"
   add_foreign_key "category_to_questions", "questions"
+  add_foreign_key "channels", "messages", column: "messages_id"
+  add_foreign_key "channels", "users", column: "users_id"
+  add_foreign_key "messages", "channels"
+  add_foreign_key "messages", "users"
   add_foreign_key "questions", "answers", column: "correct_answer_id"
   add_foreign_key "questions", "users"
   add_foreign_key "user_answer_votes", "answers"
@@ -98,4 +120,5 @@ ActiveRecord::Schema.define(version: 2020_07_07_172132) do
   add_foreign_key "user_question_votes", "users"
   add_foreign_key "user_saved_questions", "questions"
   add_foreign_key "user_saved_questions", "users"
+  add_foreign_key "users", "messages", column: "messages_id"
 end
