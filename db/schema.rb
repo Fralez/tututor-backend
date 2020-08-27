@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 2020_08_27_161234) do
     t.string "name", default: "", null: false
     t.bigint "users_id", null: false
     t.bigint "messages_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["messages_id"], name: "index_channels_on_messages_id"
     t.index ["users_id"], name: "index_channels_on_users_id"
   end
@@ -43,6 +45,8 @@ ActiveRecord::Schema.define(version: 2020_08_27_161234) do
   create_table "messages", force: :cascade do |t|
     t.text "content", null: false
     t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.bigint "channel_id", null: false
     t.index ["channel_id"], name: "index_messages_on_channel_id"
     t.index ["user_id"], name: "index_messages_on_user_id"

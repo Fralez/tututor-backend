@@ -5,6 +5,8 @@ class CreateChannels < ActiveRecord::Migration[6.0]
 
       t.references :users, null: false, foreign_key: true
       t.references :messages, foreign_key: true
+
+      t.timestamps null: false
     end
   end
 end
