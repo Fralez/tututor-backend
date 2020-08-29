@@ -20,4 +20,7 @@ Rails.application.routes.draw do
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
+
+  resources :channels, only: %i[index create]
+  get '/channels/:user_one_id/:user_two_id', to: 'channels#show'
 end
