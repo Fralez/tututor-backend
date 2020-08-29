@@ -34,8 +34,12 @@ ActiveRecord::Schema.define(version: 2020_08_27_155915) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name", default: "", null: false
+    t.bigint "user_one_id", null: false
+    t.bigint "user_two_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_one_id"], name: "index_channels_on_user_one_id"
+    t.index ["user_two_id"], name: "index_channels_on_user_two_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -106,6 +110,8 @@ ActiveRecord::Schema.define(version: 2020_08_27_155915) do
   add_foreign_key "answers", "users"
   add_foreign_key "category_to_questions", "question_categories"
   add_foreign_key "category_to_questions", "questions"
+  add_foreign_key "channels", "users", column: "user_one_id"
+  add_foreign_key "channels", "users", column: "user_two_id"
   add_foreign_key "messages", "channels"
   add_foreign_key "messages", "users"
   add_foreign_key "questions", "answers", column: "correct_answer_id"
