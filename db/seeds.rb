@@ -13,31 +13,53 @@ if Rails.env.development?
   end
 
   # Mock-data users
-  User.find_or_create_by!(email: 'pcasuelas@example.com') do |admin|
-    admin.identity_number = '11111111'
-    admin.name = 'Pepe Casuelas'
-    admin.gender = 1
-    admin.birth_date = DateTime.civil_from_format :local, 2001, 01, 01
-    admin.password = 'password'
-    admin.admin = false
+  User.find_or_create_by!(email: 'pcasuelas@example.com') do |user|
+    user.identity_number = '11111111'
+    user.name = 'Pepe Casuelas'
+    user.gender = 1
+    user.birth_date = DateTime.civil_from_format :local, 2001, 01, 01
+    user.password = 'password'
+    user.admin = false
   end
 
-  User.find_or_create_by!(email: 'nuzumaki@example.com') do |admin|
-    admin.identity_number = '12345677'
-    admin.name = 'Naruto Uzumaki'
-    admin.gender = 1
-    admin.birth_date = DateTime.civil_from_format :local, 2001, 07, 07
-    admin.password = 'password'
-    admin.admin = true
+  User.find_or_create_by!(email: 'nuzumaki@example.com') do |user|
+    user.identity_number = '12345677'
+    user.name = 'Naruto Uzumaki'
+    user.gender = 1
+    user.birth_date = DateTime.civil_from_format :local, 2001, 07, 07
+    user.password = 'password'
+    user.admin = true
   end
 
-  User.find_or_create_by!(email: 'suchiha@example.com') do |admin|
-    admin.identity_number = '22222222'
-    admin.name = 'Sasuke Uchiha'
-    admin.gender = 1
-    admin.birth_date = DateTime.civil_from_format :local, 2001, 02, 02
-    admin.password = 'password'
-    admin.admin = false
+  User.find_or_create_by!(email: 'suchiha@example.com') do |user|
+    user.identity_number = '22222222'
+    user.name = 'Sasuke Uchiha'
+    user.gender = 1
+    user.birth_date = DateTime.civil_from_format :local, 2001, 02, 02
+    user.password = 'password'
+    user.admin = false
+  end
+
+    # Mock-data institutions
+  Institution.find_or_create_by!(email: 'anima@example.com') do |institution|
+    institution.name = 'ANIMA - Bachillerato Tecnológico'
+    institution.address = "Canelones 1162"
+    institution.description = "This is the description of ANIMA"
+    institution.creator = User.find_by(email: 'admin@example.com')
+  end
+
+  Institution.find_or_create_by!(email: 'fhce@example.com') do |institution|
+    institution.name = 'Facultad de Humanidades - Universidad de la República'
+    institution.address = "Avenida Uruguay 1695"
+    institution.description = "This is the description of FHCE"
+    institution.creator = User.find_by(email: 'admin@example.com')
+  end
+
+  Institution.find_or_create_by!(email: 'ort@example.com') do |institution|
+    institution.name = 'Universidad ORT Uruguay'
+    institution.address = "Cuareim 1451"
+    institution.description = "This is the description of ORT"
+    institution.creator = User.find_by(email: 'admin@example.com')
   end
 end
 
