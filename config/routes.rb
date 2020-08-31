@@ -23,4 +23,7 @@ Rails.application.routes.draw do
 
   resources :channels, only: %i[index create]
   get '/channels/:user_one_id/:user_two_id', to: 'channels#show'
+
+  get '/messages/:channel_id', to: 'messages#index'
+  resources :messages, only: %i[create]
 end

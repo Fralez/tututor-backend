@@ -3,6 +3,11 @@
 class MessagesController < ApplicationController
   include CurrentUserConcern
 
+  def index
+    messages = Message.all.where(channel_id: params[:channel_id])
+    render json: messages.as_json, status: :ok
+  end
+
   def create
     message = Message.new(message_params)
     message.user = @current_user
