@@ -11,34 +11,6 @@ if Rails.env.development?
     admin.password = 'password'
     admin.admin = true
   end
-
-  # Mock-data users
-  User.find_or_create_by!(email: 'pcasuelas@example.com') do |admin|
-    admin.identity_number = '11111111'
-    admin.name = 'Pepe Casuelas'
-    admin.gender = 1
-    admin.birth_date = DateTime.civil_from_format :local, 2001, 01, 01
-    admin.password = 'password'
-    admin.admin = false
-  end
-
-  User.find_or_create_by!(email: 'nuzumaki@example.com') do |admin|
-    admin.identity_number = '12345677'
-    admin.name = 'Naruto Uzumaki'
-    admin.gender = 1
-    admin.birth_date = DateTime.civil_from_format :local, 2001, 07, 07
-    admin.password = 'password'
-    admin.admin = true
-  end
-
-  User.find_or_create_by!(email: 'suchiha@example.com') do |admin|
-    admin.identity_number = '22222222'
-    admin.name = 'Sasuke Uchiha'
-    admin.gender = 1
-    admin.birth_date = DateTime.civil_from_format :local, 2001, 02, 02
-    admin.password = 'password'
-    admin.admin = false
-  end
 end
 
 # Create categories
