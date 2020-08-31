@@ -17,13 +17,4 @@ Rails.application.routes.draw do
   post '/answers/vote', to: 'answers#vote_answer'
 
   resources :categories, only: %i[create]
-
-  # Serve websocket cable requests in-process
-  mount ActionCable.server => '/cable'
-
-  resources :channels, only: %i[index create]
-  get '/channels/:user_one_id/:user_two_id', to: 'channels#show'
-
-  get '/messages/:channel_id', to: 'messages#index'
-  resources :messages, only: %i[create]
 end

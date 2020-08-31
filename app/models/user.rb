@@ -17,9 +17,6 @@ class User < ApplicationRecord
   has_many :user_answer_votes, dependent: :destroy
   has_many :answers, through: :user_answer_votes
 
-  has_many :messages
-  has_many :channels, through: :messages
-
   validates :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :identity_number, presence: true
