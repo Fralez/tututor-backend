@@ -5,7 +5,8 @@ class QuestionsController < ApplicationController
 
   def index
     order = params["sort_order"] || :desc
-    @questions = Question.all.order(:created_at => order) do |q|
+    institution = Institution.find(params[:institution_id]) if params[:institution_id]
+    @questions = Question.all.order(created_at: order) do |q|
 
       user_vote = nil
       if @current_user
@@ -19,6 +20,8 @@ class QuestionsController < ApplicationController
           votes: q.correct_answer.votes.as_json, 
           user_vote: user_vote.as_json })
       end
+
+      next unless params[:institution_id] && q.creator.institution_id == institution.id
 
       q.attributes.merge({ creator: q.creator, votes: q.votes,
         category: q.category.as_json,
