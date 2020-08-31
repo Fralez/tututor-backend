@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_27_155915) do
+ActiveRecord::Schema.define(version: 2020_08_31_224631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,17 @@ ActiveRecord::Schema.define(version: 2020_08_27_155915) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_one_id"], name: "index_channels_on_user_one_id"
     t.index ["user_two_id"], name: "index_channels_on_user_two_id"
+  end
+
+  create_table "institutions", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", default: "", null: false
+    t.string "description", null: false
+    t.string "address", null: false
+    t.bigint "creator_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["creator_id"], name: "index_institutions_on_creator_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -102,8 +113,10 @@ ActiveRecord::Schema.define(version: 2020_08_27_155915) do
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "institution_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["identity_number"], name: "index_users_on_identity_number", unique: true
+    t.index ["institution_id"], name: "index_users_on_institution_id"
   end
 
   add_foreign_key "answers", "questions"
@@ -112,6 +125,7 @@ ActiveRecord::Schema.define(version: 2020_08_27_155915) do
   add_foreign_key "category_to_questions", "questions"
   add_foreign_key "channels", "users", column: "user_one_id"
   add_foreign_key "channels", "users", column: "user_two_id"
+  add_foreign_key "institutions", "users", column: "creator_id"
   add_foreign_key "messages", "channels"
   add_foreign_key "messages", "users"
   add_foreign_key "questions", "answers", column: "correct_answer_id"
@@ -122,4 +136,5 @@ ActiveRecord::Schema.define(version: 2020_08_27_155915) do
   add_foreign_key "user_question_votes", "users"
   add_foreign_key "user_saved_questions", "questions"
   add_foreign_key "user_saved_questions", "users"
+  add_foreign_key "users", "institutions"
 end

@@ -20,6 +20,8 @@ class User < ApplicationRecord
   has_many :messages
   has_many :channels, through: :messages
 
+  belongs_to :institution
+
   validates :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :identity_number, presence: true
