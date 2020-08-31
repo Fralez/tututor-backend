@@ -4,7 +4,8 @@ class QuestionsController < ApplicationController
   include CurrentUserConcern
 
   def index
-    @questions = Question.all.map do |q|
+    order = params["sort_order"] || :desc
+    @questions = Question.all.order(:created_at => order) do |q|
 
       user_vote = nil
       if @current_user
