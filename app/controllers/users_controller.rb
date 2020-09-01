@@ -10,7 +10,10 @@ class UsersController < ApplicationController
     @user = User.find_by(id: params[:id])
 
     if @user
-      render json: { user: @user.as_json(except: %i[created_at updated_at]) }, status: :ok
+      render json: { user: @user.attributes.merge({ 
+                     institution: @user.institution_id && Institution.find(@user.institution_id) })
+                     .as_json(except: %i[created_at updated_at]) },
+                     status: :ok
     else
       not_found
     end
