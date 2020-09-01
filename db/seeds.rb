@@ -61,7 +61,8 @@ if Rails.env.development?
     institution.description = "This is the description of ORT"
     institution.creator = User.find_by(email: 'admin@example.com')
   end
-
+  
+  # Mock-data students
   User.find_or_create_by!(email: 'animastudent@example.com') do |user|
     user.identity_number = '12121212'
     user.name = 'ANIMA Student'

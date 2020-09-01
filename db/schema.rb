@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2020_08_31_224631) do
     t.index ["user_one_id"], name: "index_channels_on_user_one_id"
     t.index ["user_two_id"], name: "index_channels_on_user_two_id"
   end
-
+  
   create_table "institutions", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", default: "", null: false
