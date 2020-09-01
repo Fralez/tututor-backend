@@ -4,10 +4,9 @@ class QuestionsController < ApplicationController
   include CurrentUserConcern
 
   def index
-    order = params["sort_order"] || :desc
+    order = params[:sort_order] || :desc
     institution = Institution.find(params[:institution_id]) if params[:institution_id]
     @questions = Question.all.order(created_at: order) do |q|
-
       user_vote = nil
       if @current_user
         user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: q.correct_answer_id).last

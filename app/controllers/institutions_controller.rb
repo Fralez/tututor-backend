@@ -1,4 +1,4 @@
-class InstitutionController < ApplicationController
+class InstitutionsController < ApplicationController
   def index
     institutions = Institution.all
     render json: institutions.as_json, status: :ok

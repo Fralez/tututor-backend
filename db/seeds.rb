@@ -61,6 +61,36 @@ if Rails.env.development?
     institution.description = "This is the description of ORT"
     institution.creator = User.find_by(email: 'admin@example.com')
   end
+
+  User.find_or_create_by!(email: 'animastudent@example.com') do |user|
+    user.identity_number = '12121212'
+    user.name = 'ANIMA Student'
+    user.gender = 2
+    user.birth_date = DateTime.civil_from_format :local, 2003, 01, 02
+    user.password = 'password'
+    user.admin = false
+    user.institution_id = Institution.find_by(email: 'anima@example.com').id
+  end
+
+  User.find_or_create_by!(email: 'fhcestudent@example.com') do |user|
+    user.identity_number = '13131313'
+    user.name = 'FHCE Student'
+    user.gender = 2
+    user.birth_date = DateTime.civil_from_format :local, 2003, 01, 02
+    user.password = 'password'
+    user.admin = false
+    user.institution_id = Institution.find_by(email: 'fhce@example.com').id
+  end
+
+  User.find_or_create_by!(email: 'ortstudent@example.com') do |user|
+    user.identity_number = '14141414'
+    user.name = 'ORT Student'
+    user.gender = 2
+    user.birth_date = DateTime.civil_from_format :local, 2003, 01, 02
+    user.password = 'password'
+    user.admin = false
+    user.institution_id = Institution.find_by(email: 'ort@example.com').id
+  end
 end
 
 # Create categories
