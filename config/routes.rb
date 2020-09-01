@@ -18,6 +18,8 @@ Rails.application.routes.draw do
 
   resources :categories, only: %i[create]
 
+  resources :institutions, only: %i[index show create]
+
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
 

@@ -21,7 +21,9 @@ class SessionsController < ApplicationController
     if @current_user
       render json: {
         logged_in: true,
-        user: @current_user
+        user: @current_user.attributes.merge({ 
+              institution: @current_user.institution_id && Institution.find(@current_user.institution_id) })
+              .as_json(except: %i[created_at updated_at])
       }
     else
       render json: {
