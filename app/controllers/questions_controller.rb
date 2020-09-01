@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   def index
     order = params[:sort_order] || :desc
     institution = Institution.find(params[:institution_id]) if params[:institution_id]
-    @questions = Question.all.order(created_at: order) do |q|
+    @questions = Question.all.order(created_at: order).map do |q|
       user_vote = nil
       if @current_user
         user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: q.correct_answer_id).last
@@ -20,14 +20,14 @@ class QuestionsController < ApplicationController
           user_vote: user_vote.as_json })
       end
 
-      next unless params[:institution_id] && q.creator.institution_id == institution.id
+      next if !params[:institution_id].nil? && q.creator.institution_id != institution.id
 
       q.attributes.merge({ creator: q.creator, votes: q.votes,
         category: q.category.as_json,
         correct_answer: correct_answer_serialized })
     end
 
-    render json: @questions.as_json,
+    render json: @questions.reject {|e| !e.present?}.as_json,
            status: :ok
   end
 
