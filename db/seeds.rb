@@ -40,28 +40,61 @@ if Rails.env.development?
     user.admin = false
   end
 
+  # Mock-data institution admins
+  User.find_or_create_by!(email: 'animaadmin@example.com') do |user|
+    user.identity_number = '21212121'
+    user.name = 'ANIMA Admin'
+    user.gender = 2
+    user.birth_date = DateTime.civil_from_format :local, 2003, 01, 02
+    user.password = 'password'
+    user.admin = false
+  end
+
+  User.find_or_create_by!(email: 'fhceadmin@example.com') do |user|
+    user.identity_number = '31313131'
+    user.name = 'FHCE Admin'
+    user.gender = 2
+    user.birth_date = DateTime.civil_from_format :local, 2003, 01, 02
+    user.password = 'password'
+    user.admin = false
+  end
+
+  User.find_or_create_by!(email: 'ortadmin@example.com') do |user|
+    user.identity_number = '41414141'
+    user.name = 'ORT Admin'
+    user.gender = 2
+    user.birth_date = DateTime.civil_from_format :local, 2003, 01, 02
+    user.password = 'password'
+    user.admin = false
+  end
+
     # Mock-data institutions
   Institution.find_or_create_by!(email: 'anima@example.com') do |institution|
     institution.name = 'ANIMA - Bachillerato Tecnológico'
     institution.address = "Canelones 1162"
     institution.description = "This is the description of ANIMA"
-    institution.creator = User.find_by(email: 'admin@example.com')
+    institution.creator = User.find_by(email: 'animaadmin@example.com')
   end
 
   Institution.find_or_create_by!(email: 'fhce@example.com') do |institution|
     institution.name = 'Facultad de Humanidades - Universidad de la República'
     institution.address = "Avenida Uruguay 1695"
     institution.description = "This is the description of FHCE"
-    institution.creator = User.find_by(email: 'admin@example.com')
+    institution.creator = User.find_by(email: 'fhceadmin@example.com')
   end
 
   Institution.find_or_create_by!(email: 'ort@example.com') do |institution|
     institution.name = 'Universidad ORT Uruguay'
     institution.address = "Cuareim 1451"
     institution.description = "This is the description of ORT"
-    institution.creator = User.find_by(email: 'admin@example.com')
+    institution.creator = User.find_by(email: 'ortadmin@example.com')
   end
-  
+
+  # Update institution admin's institution_id
+  User.find_by(email: "animaadmin@example.com").update!(institution_id: Institution.find_by(email: "anima@example.com").id)
+  User.find_by(email: "fhceadmin@example.com").update!(institution_id: Institution.find_by(email: "fhce@example.com").id)
+  User.find_by(email: "ortadmin@example.com").update!(institution_id: Institution.find_by(email: "ort@example.com").id)
+
   # Mock-data students
   User.find_or_create_by!(email: 'animastudent@example.com') do |user|
     user.identity_number = '12121212'

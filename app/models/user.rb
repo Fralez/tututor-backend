@@ -28,4 +28,8 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :gender, presence: true
   validates :birth_date, presence: true
+
+  def saved_questions
+    user_saved_questions.map { |item| item.question }
+  end
 end

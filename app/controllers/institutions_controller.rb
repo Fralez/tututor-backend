@@ -19,6 +19,7 @@ class InstitutionsController < ApplicationController
       institution = Institution.new(institution_params.merge(creator_id: @current_user.id))
 
       if institution.save
+        @current_user.update!(institution_id: institution.id)
         render json: { institution: institution.as_json },
                status: :created
       else
