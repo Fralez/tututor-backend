@@ -32,4 +32,8 @@ class User < ApplicationRecord
   def saved_questions
     user_saved_questions.map { |item| item.question }
   end
+
+  def institution
+    Institution.find(institution_id)
+  end
 end

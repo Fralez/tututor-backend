@@ -11,7 +11,7 @@ class UsersController < ApplicationController
 
     if @user
       render json: { user: @user.attributes.merge({ 
-                     institution: @user.institution_id && Institution.find(@user.institution_id), 
+                     institution: @user.institution, 
                      saved_questions: @user.saved_questions })
                      .as_json(except: %i[created_at updated_at]) },
                      status: :ok
