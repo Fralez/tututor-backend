@@ -105,7 +105,15 @@ class QuestionsController < ApplicationController
                status: :ok
       else
         @user_question_vote = UserQuestionVote.new(user: @current_user, question: question, negative: params[:negative])
+
         if @user_question_vote.save
+          # Manage creator's reputation
+          if params[:negative]
+            question.creator.update!(reputation: question.creator.reputation - 2)
+          else
+            question.creator.update!(reputation: question.creator.reputation + 3)
+          end
+
           render json: { votes: question.votes },
                  status: :created
         else
@@ -127,13 +135,18 @@ class QuestionsController < ApplicationController
 
       if @user_saved_question.present?
         @user_saved_question.destroy
-
+        # Manage creator's reputation
+        question.creator.update!(reputation: question.creator.reputation - 2)
+        
         render json: { hasUnsaved: true },
                status: :ok
       else
         @user_saved_question = UserSavedQuestion.new(user: @current_user, question: question)
 
         if @user_saved_question.save
+          # Manage creator's reputation
+          question.creator.update!(reputation: question.creator.reputation + 2)
+
           render json: { user_saved_question: @user_saved_question },
                  status: :created
         else
@@ -160,6 +173,7 @@ class QuestionsController < ApplicationController
       # Unmark correct answer case
       if question.correct_answer_id == params[:correct_answer_id]
         question.update!(correct_answer_id: nil)
+        question.creator.update!(reputation: question.creator.reputation - 5)
         render json: { correct_answer: nil, unmarked: true },
                status: :created
       else
@@ -169,6 +183,7 @@ class QuestionsController < ApplicationController
         user_vote = UserAnswerVote.where(user_id: @current_user.id, answer_id: question.correct_answer_id).last
 
         if question.correct_answer
+          question.creator.update!(reputation: question.creator.reputation + 5)
           render json: { correct_answer: question.correct_answer.attributes.merge({ 
             creator: question.correct_answer.creator.as_json, votes: question.correct_answer.votes.as_json, user_vote: user_vote.as_json })
           },

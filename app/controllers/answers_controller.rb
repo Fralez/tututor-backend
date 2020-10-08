@@ -65,7 +65,15 @@ class AnswersController < ApplicationController
                  status: :ok
       else
         @user_answer_vote = UserAnswerVote.new(user: @current_user, answer: answer, negative: params[:negative])
+
         if @user_answer_vote.save
+          # Manage creator's reputation
+          if params[:negative]
+            answer.creator.update!(reputation: answer.creator.reputation - 2)
+          else
+            answer.creator.update!(reputation: answer.creator.reputation + 3)
+          end
+
           render json: { votes: answer.votes },
                  status: :created
         else
