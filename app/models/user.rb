@@ -34,6 +34,6 @@ class User < ApplicationRecord
   end
 
   def institution
-    Institution.find(institution_id)
+    Institution.find(institution_id) unless institution_id.nil?
   end
 end
