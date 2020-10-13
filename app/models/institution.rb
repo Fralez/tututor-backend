@@ -7,4 +7,8 @@ class Institution < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true
   validates :address, presence: true
+
+  def creator
+    User.find creator_id
+  end
 end

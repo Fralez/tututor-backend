@@ -1,13 +1,16 @@
 class InstitutionsController < ApplicationController
   def index
-    institutions = Institution.all
+    institutions = Institution.all.map do |insti|
+    
+      insti.attributes.merge({ creator: insti.creator })
+    end
     render json: institutions.as_json, status: :ok
   end
 
   def show
     institution = Institution.find(params[:id])
     if institution
-      render json: { institution: institution },
+      render json: { institution: institution.attributes.merge({ creator: institution.creator }) },
              status: :ok
     else
       not_found
@@ -20,7 +23,7 @@ class InstitutionsController < ApplicationController
 
       if institution.save
         @current_user.update!(institution_id: institution.id)
-        render json: { institution: institution.as_json },
+        render json: { institution: institution.attributes.merge({ creator: institution.creator }) },
                status: :created
       else
         render json: { errors: institution.errors.full_messages },
