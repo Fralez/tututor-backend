@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   resources :categories, only: %i[create]
 
   resources :institutions, only: %i[index show create]
+  post '/institutions/clear_user_institution', to: 'institutions#clear_user_institution'
+  post '/institutions/update_creator', to: 'institutions#update_creator'
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
