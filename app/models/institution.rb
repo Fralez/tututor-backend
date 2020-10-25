@@ -11,4 +11,8 @@ class Institution < ApplicationRecord
   def creator
     User.find creator_id
   end
+
+  def users
+    User.where.not(id: creator_id).where(institution_id: id)
+  end
 end
