@@ -35,6 +35,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def users_without_institution
+    render json: User.where(institution_id: nil).all.order(name: :asc).as_json(except: %i[created_at updated_at]), status: :ok
+  end
+
   private
 
   def user_params

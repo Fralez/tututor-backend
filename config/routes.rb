@@ -2,6 +2,7 @@
 
 Rails.application.routes.draw do
   resources :users, only: %i[index show create]
+  get '/users/filter/without_institution', to: 'users#users_without_institution'
 
   resources :questions, only: %i[index show create]
   post '/questions/vote', to: 'questions#vote_question'
