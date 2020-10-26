@@ -39,6 +39,28 @@ class UsersController < ApplicationController
     render json: User.where(institution_id: nil).all.order(name: :asc).as_json(except: %i[created_at updated_at]), status: :ok
   end
 
+  def clear_institution
+    institution = Institution.find(params[:institution_id])
+    user = User.find(params[:user_id])
+
+    if user.nil?
+      render json: { errors: 'null user' },
+              status: :unprocessable_entity
+    elsif institution.creator.id == user.id
+      render json: { errors: 'cannot remove creator' },
+              status: :unprocessable_entity
+    else 
+      # Update user institution id
+      user.update!(institution_id: nil)
+      render json: { hasRemovedUser: true },
+              status: :created
+    end
+  end
+
+  def show_user_invitations
+    render json: {}, status: :ok
+  end
+
   private
 
   def user_params

@@ -3,6 +3,8 @@
 Rails.application.routes.draw do
   resources :users, only: %i[index show create]
   get '/users/filter/without_institution', to: 'users#users_without_institution'
+  post '/users/clear_institution', to: 'users#clear_institution'
+  get '/users/invitations', to: 'users#show_user_invitations'
 
   resources :questions, only: %i[index show create]
   post '/questions/vote', to: 'questions#vote_question'
@@ -20,7 +22,6 @@ Rails.application.routes.draw do
   resources :categories, only: %i[create]
 
   resources :institutions, only: %i[index show create]
-  post '/institutions/clear_user_institution', to: 'institutions#clear_user_institution'
   post '/institutions/update_creator', to: 'institutions#update_creator'
 
   # Serve websocket cable requests in-process

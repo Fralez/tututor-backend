@@ -1,4 +1,6 @@
 class InstitutionsController < ApplicationController
+  include CurrentUserConcern
+
   def index
     institutions = Institution.all.map do |insti|
 
@@ -31,24 +33,6 @@ class InstitutionsController < ApplicationController
       end
     else
       render json: { error: 'unauthorized' }, status: :unauthorized
-    end
-  end
-
-  def clear_user_institution
-    institution = Institution.find(params[:institution_id])
-    user = User.find(params[:user_id])
-
-    if user.nil?
-      render json: { errors: 'null user' },
-              status: :unprocessable_entity
-    elsif institution.creator.id == user.id
-      render json: { errors: 'cannot remove creator' },
-              status: :unprocessable_entity
-    else 
-      # Update user institution id
-      user.update!(institution_id: nil)
-      render json: { hasRemovedUser: true },
-              status: :created
     end
   end
 
