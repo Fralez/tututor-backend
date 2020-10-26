@@ -2,6 +2,8 @@
 
 # Users controller
 class UsersController < ApplicationController
+  include CurrentUserConcern
+
   def index
     render json: User.all.as_json(except: %i[created_at updated_at]), status: :ok
   end
@@ -40,25 +42,63 @@ class UsersController < ApplicationController
   end
 
   def clear_institution
-    institution = Institution.find(params[:institution_id])
-    user = User.find(params[:user_id])
 
-    if user.nil?
-      render json: { errors: 'null user' },
-              status: :unprocessable_entity
-    elsif institution.creator.id == user.id
-      render json: { errors: 'cannot remove creator' },
-              status: :unprocessable_entity
-    else 
-      # Update user institution id
-      user.update!(institution_id: nil)
-      render json: { hasRemovedUser: true },
-              status: :created
+    if @current_user
+      institution = Institution.find(params[:institution_id])
+
+      if institution.creator.id == @current_user.id
+        render json: { errors: 'cannot remove creator' },
+                status: :unprocessable_entity
+      else 
+        # Update user institution id
+        @current_user.update!(institution_id: nil)
+        render json: { hasRemovedUser: true },
+                status: :created
+      end
+    else
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
+    end
+  end
+
+  def accept_invitation
+    invitation = UserInstitutionInvitation.find params[:invitation_id]
+    if @current_user.id == invitation.user_id
+      @current_user.update!(institution_id: invitation.institution_id)
+      # Once accepted, delete all the invitations involving the user
+      @current_user.invitations.destroy_all
+
+      render json: { hasAcceptedInvitation: true },
+                status: :created
+    else
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
+    end
+  end
+
+  def reject_invitation
+    invitation = UserInstitutionInvitation.find params[:invitation_id]
+    if @current_user.id == invitation.user_id
+      invitation.destroy
+      render json: { hasRejectedInvitation: true },
+                status: :created
+    else
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
     end
   end
 
   def show_user_invitations
-    render json: {}, status: :ok
+    if @current_user
+      invitations = @current_user.invitations.map do |invitation|
+        institution = institution.find invitation.institution_id
+        invitation.attributes.merge({ institution_name: institution.name })
+      end
+      render json: invitations.as_json, status: :ok
+    else
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
+    end
   end
 
   private

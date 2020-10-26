@@ -38,18 +38,38 @@ class InstitutionsController < ApplicationController
 
   def update_creator
     institution = Institution.find(params[:institution_id])
-    user = User.find(params[:new_creator_user_id])
 
-    if user.nil?
-      render json: { errors: 'null user' },
-              status: :unprocessable_entity
-    elsif user.institution_id != institution.id
-      render json: { errors: 'user not belongs to institution' },
-              status: :unprocessable_entity
+    if @current_user.id == institution.creator.id
+      user = User.find(params[:new_creator_user_id])
+
+      if user.nil?
+        render json: { errors: 'null user' },
+                status: :unprocessable_entity
+      elsif user.institution_id != institution.id
+        render json: { errors: 'user not belongs to institution' },
+                status: :unprocessable_entity
+      else
+        institution.update!(creator_id: user.id)
+        render json: { hasUpdatedCreator: true },
+                status: :created
+      end
     else
-      institution.update!(creator_id: user.id)
-      render json: { hasUpdatedCreator: true },
-              status: :created
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
+    end
+  end
+
+  def create_invitation
+    institution = Institution.find params[:institution_id]
+
+    if @current_user.id == institution.creator.id
+      user = User.find params[:user_id]
+      invitation = UserInstitutionInvitation.create!(user_id: user.id, institution_id: Institution.id)
+
+      render json: { invitation: invitation }, status: :created
+    else
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
     end
   end
 
