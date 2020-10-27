@@ -2,11 +2,16 @@
 
 Rails.application.routes.draw do
   resources :users, only: %i[index show create]
+  get '/users/show/invitations', to: 'users#show_user_invitations'
+  get '/users/filter/without_institution', to: 'users#users_without_institution'
+  post '/users/clear_institution', to: 'users#clear_institution'
+  post '/users/invitations/accept', to: 'users#accept_invitation'
+  post '/users/invitations/reject', to: 'users#reject_invitation'
 
   resources :questions, only: %i[index show create]
+  get '/search/questions', to: 'questions#search_question'
   post '/questions/vote', to: 'questions#vote_question'
   post '/questions/save', to: 'questions#save_question'
-  get '/search/questions', to: 'questions#search_question'
   post '/questions/correct_answer', to: 'questions#mark_correct_answer'
 
   resources :sessions, only: %i[create]
@@ -19,8 +24,8 @@ Rails.application.routes.draw do
   resources :categories, only: %i[create]
 
   resources :institutions, only: %i[index show create]
-  post '/institutions/clear_user_institution', to: 'institutions#clear_user_institution'
   post '/institutions/update_creator', to: 'institutions#update_creator'
+  post '/institutions/invitations/create', to: 'institutions#create_invitation'
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'

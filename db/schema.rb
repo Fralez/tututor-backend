@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_31_224631) do
+ActiveRecord::Schema.define(version: 2020_10_26_155452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,15 @@ ActiveRecord::Schema.define(version: 2020_08_31_224631) do
     t.index ["user_id"], name: "index_user_answer_votes_on_user_id"
   end
 
+  create_table "user_institution_invitations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "institution_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["institution_id"], name: "index_user_institution_invitations_on_institution_id"
+    t.index ["user_id"], name: "index_user_institution_invitations_on_user_id"
+  end
+
   create_table "user_question_votes", force: :cascade do |t|
     t.boolean "negative", null: false
     t.bigint "user_id", null: false
@@ -132,6 +141,8 @@ ActiveRecord::Schema.define(version: 2020_08_31_224631) do
   add_foreign_key "questions", "users"
   add_foreign_key "user_answer_votes", "answers"
   add_foreign_key "user_answer_votes", "users"
+  add_foreign_key "user_institution_invitations", "institutions"
+  add_foreign_key "user_institution_invitations", "users"
   add_foreign_key "user_question_votes", "questions"
   add_foreign_key "user_question_votes", "users"
   add_foreign_key "user_saved_questions", "questions"

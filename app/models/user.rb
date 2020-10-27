@@ -36,4 +36,8 @@ class User < ApplicationRecord
   def institution
     Institution.find(institution_id) unless institution_id.nil?
   end
+
+  def invitations
+    UserInstitutionInvitation.where(user_id: id)
+  end
 end

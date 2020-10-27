@@ -1,4 +1,6 @@
 class InstitutionsController < ApplicationController
+  include CurrentUserConcern
+
   def index
     institutions = Institution.all.map do |insti|
 
@@ -34,38 +36,40 @@ class InstitutionsController < ApplicationController
     end
   end
 
-  def clear_user_institution
+  def update_creator
     institution = Institution.find(params[:institution_id])
-    user = User.find(params[:user_id])
 
-    if user.nil?
-      render json: { errors: 'null user' },
-              status: :unprocessable_entity
-    elsif institution.creator.id == user.id
-      render json: { errors: 'cannot remove creator' },
-              status: :unprocessable_entity
-    else 
-      # Update user institution id
-      user.update!(institution_id: nil)
-      render json: { hasRemovedUser: true },
-              status: :created
+    if @current_user.id == institution.creator.id
+      user = User.find(params[:new_creator_user_id])
+
+      if user.nil?
+        render json: { errors: 'null user' },
+                status: :unprocessable_entity
+      elsif user.institution_id != institution.id
+        render json: { errors: 'user not belongs to institution' },
+                status: :unprocessable_entity
+      else
+        institution.update!(creator_id: user.id)
+        render json: { hasUpdatedCreator: true },
+                status: :created
+      end
+    else
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
     end
   end
 
-  def update_creator
-    institution = Institution.find(params[:institution_id])
-    user = User.find(params[:new_creator_user_id])
+  def create_invitation
+    institution = Institution.find params[:institution_id]
 
-    if user.nil?
-      render json: { errors: 'null user' },
-              status: :unprocessable_entity
-    elsif user.institution_id != institution.id
-      render json: { errors: 'user not belongs to institution' },
-              status: :unprocessable_entity
+    if @current_user.id == institution.creator.id
+      user = User.find params[:user_id]
+      invitation = UserInstitutionInvitation.create!(user_id: user.id, institution_id: institution.id)
+
+      render json: { invitation: invitation }, status: :created
     else
-      institution.update!(creator_id: user.id)
-      render json: { hasUpdatedCreator: true },
-              status: :created
+      render json: { errors: 'unauthorized' },
+              status: :unauthorized
     end
   end
 
