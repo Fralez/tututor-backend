@@ -64,7 +64,7 @@ class InstitutionsController < ApplicationController
 
     if @current_user.id == institution.creator.id
       user = User.find params[:user_id]
-      invitation = UserInstitutionInvitation.create!(user_id: user.id, institution_id: Institution.id)
+      invitation = UserInstitutionInvitation.create!(user_id: user.id, institution_id: institution.id)
 
       render json: { invitation: invitation }, status: :created
     else

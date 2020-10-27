@@ -91,7 +91,7 @@ class UsersController < ApplicationController
   def show_user_invitations
     if @current_user
       invitations = @current_user.invitations.map do |invitation|
-        institution = institution.find invitation.institution_id
+        institution = Institution.find invitation.institution_id
         invitation.attributes.merge({ institution_name: institution.name })
       end
       render json: invitations.as_json, status: :ok
