@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[index show create]
   get '/users/show/invitations', to: 'users#show_user_invitations'
   get '/users/filter/without_institution', to: 'users#users_without_institution'
+  get '/users/filter/ranking', to: 'users#users_by_reputation'
   post '/users/clear_institution', to: 'users#clear_institution'
   post '/users/invitations/accept', to: 'users#accept_invitation'
   post '/users/invitations/reject', to: 'users#reject_invitation'
