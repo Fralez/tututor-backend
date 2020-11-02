@@ -9,10 +9,4 @@ use Rack::Cors do
   end
 end
 
-Rails.application.config.hosts << "https://tututor-client.vercel.app"
-Rails.application.config.hosts <<  "https://tututor-backend.herokuapp.com"
-
-Rails.application.config.session_store :cookie_store, key: "_tututor_session_store", domain: "https://tututor-backend.herokuapp.com"
-
-
 run Rails.application
