@@ -39,6 +39,11 @@ module TututorBackend
           origins 'http://localhost:8080'
           resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
         end
+
+        allow do
+          origins 'https://tututor-client.vercel.app'
+          resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+        end
       end
     end
 
