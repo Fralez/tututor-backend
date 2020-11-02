@@ -43,7 +43,7 @@ module TututorBackend
     end
 
     if Rails.env == 'production'
-      config.session_store :cookie_store, key: "_tututor_session_store", domain: "tututor-backend.herokuapp.com"
+      # config.session_store :cookie_store, key: "_tututor_session_store", domain: <domain_here>
     else
       config.session_store :cookie_store, key: "_tututor_session_store"
     end
