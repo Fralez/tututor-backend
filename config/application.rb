@@ -47,8 +47,6 @@ module TututorBackend
       end
     end
 
-    Rails.application.config.hosts << "https://tututor-client.vercel.app"
-
     if Rails.env.production?
       config.session_store :cookie_store, key: "_tututor_session_store", domain: "https://tututor-backend.herokuapp.com"
     else
