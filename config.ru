@@ -9,4 +9,6 @@ use Rack::Cors do
   end
 end
 
+Rails.application.config.hosts << "https://tututor-client.vercel.app"
+
 run Rails.application
