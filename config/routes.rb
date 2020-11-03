@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :users, only: %i[index show create]
+  resources :users, only: %i[index show create update destroy]
+  get '/users/email/:email', to: 'users#show_by_email'
   get '/users/show/invitations', to: 'users#show_user_invitations'
   get '/users/filter/without_institution', to: 'users#users_without_institution'
   post '/users/clear_institution', to: 'users#clear_institution'

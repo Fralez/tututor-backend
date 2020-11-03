@@ -22,6 +22,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def show_by_email
+    @user = User.find_by(email: params[:email])
+
+    if @user
+      render json: { user: @user.attributes.merge({ 
+                     institution: @user.institution, 
+                     saved_questions: @user.saved_questions })
+                     .as_json(except: %i[created_at updated_at]) },
+                     status: :ok
+    else
+      not_found
+    end
+  end
+
   def create
     @user = User.new(user_params)
 
@@ -41,8 +55,21 @@ class UsersController < ApplicationController
     render json: User.where(institution_id: nil).all.order(name: :asc).as_json(except: %i[created_at updated_at]), status: :ok
   end
 
-  def clear_institution
+  def update
+    @user = User.find params[:id]
 
+    @user.update!(user_params)
+
+    render json: { user: @user.as_json(except: %i[created_at updated_at]) },
+           status: :created
+  end
+
+  def destroy
+    # Related to: institutions, answers, questions, channels, messages, user_question_votes, user_answer_votes, user_institution_invitations, user_saved_questions
+    @user = User.find params[:id]
+  end
+
+  def clear_institution
     if @current_user
       institution = Institution.find(params[:institution_id])
 
