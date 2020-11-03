@@ -39,9 +39,9 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Mount Action Cable outside main process or domain.
-  # config.action_cable.mount_path = nil
-  # config.action_cable.url = 'wss://example.com/cable'
-  # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
+  config.action_cable.mount_path = '/cable'
+  config.action_cable.url = 'wss://tututor-backend.herokuapp.com/cable'
+  config.action_cable.allowed_request_origins = [ 'https://tututor-client.vercel.app', /http:\/\/tututor-client.vercel.app.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -109,4 +109,6 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  config.serve_static_assets = true
 end

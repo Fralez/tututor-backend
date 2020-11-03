@@ -64,7 +64,7 @@ class UsersController < ApplicationController
   def accept_invitation
     invitation = UserInstitutionInvitation.find params[:invitation_id]
     if @current_user.id == invitation.user_id
-      @current_user.update!(institution_id: invitation.institution_id)
+      @current_user.update!(institution_id: invitation.institution_id, reputation: @current_user.reputation + 5)
       # Once accepted, delete all the invitations involving the user
       @current_user.invitations.destroy_all
 
@@ -104,7 +104,7 @@ class UsersController < ApplicationController
   def users_by_reputation
     render json: User.all.order(reputation: :desc).as_json(except: %i[created_at updated_at]), status: :ok
   end
-  
+
   private
 
   def user_params

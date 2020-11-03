@@ -2,4 +2,11 @@
 
 require_relative 'config/environment'
 
+use Rack::Cors do
+  allow do
+    origins 'https://tututor-client.vercel.app'
+    resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+  end
+end
+
 run Rails.application

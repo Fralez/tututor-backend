@@ -84,6 +84,4 @@ test:
 #
 production:
   <<: *default
-  database: tututor_backend_production
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
