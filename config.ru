@@ -7,6 +7,11 @@ use Rack::Cors do
     origins 'https://tututor-client.vercel.app'
     resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
   end
+
+  allow do
+    origins 'https://tututor-client.herokuapp.com/'
+    resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+  end
 end
 
 run Rails.application
