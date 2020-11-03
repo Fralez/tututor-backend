@@ -101,6 +101,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def users_by_reputation
+    render json: User.all.order(reputation: :desc).as_json(except: %i[created_at updated_at]), status: :ok
+  end
+
   private
 
   def user_params
