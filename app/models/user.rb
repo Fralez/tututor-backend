@@ -30,7 +30,7 @@ class User < ApplicationRecord
   validates :birth_date, presence: true
 
   def saved_questions
-    user_saved_questions.map { |item| item.question }
+    user_saved_questions.map { |item| item.question.attributes.merge({ creator: item.question.creator, votes: item.question.votes, category: item.question.category.as_json }) }
   end
 
   def institution
