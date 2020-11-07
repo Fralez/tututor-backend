@@ -22,8 +22,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def show_by_email
-    @user = User.find_by(email: params[:email])
+  def show_by_identity_number
+    @user = User.find_by(identity_number: params[:identity_number])
 
     if @user
       render json: { user: @user.attributes.merge({ 
@@ -56,12 +56,15 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[:id]
-
-    @user.update!(user_params)
-
-    render json: { user: @user.as_json(except: %i[created_at updated_at]) },
-           status: :created
+    @user = User.find_by(identity_number: params[:user][:identity_number])
+    if @user
+      @user.update!(user_params)
+  
+      render json: { user: @user.as_json(except: %i[created_at updated_at]) },
+             status: :created
+    else
+      render json: { error: :unprocessable_entity }
+    end
   end
 
   def destroy

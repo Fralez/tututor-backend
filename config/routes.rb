@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :users, only: %i[index show create update destroy]
-  get '/users/email/:email', to: 'users#show_by_email'
+  resources :users, only: %i[index show create destroy]
   get '/users/show/invitations', to: 'users#show_user_invitations'
   get '/users/filter/without_institution', to: 'users#users_without_institution'
   get '/users/filter/ranking', to: 'users#users_by_reputation'
+  get '/users/identity_number/:identity_number', to: 'users#show_by_identity_number'
   post '/users/clear_institution', to: 'users#clear_institution'
   post '/users/invitations/accept', to: 'users#accept_invitation'
   post '/users/invitations/reject', to: 'users#reject_invitation'
+  put '/users/update', to: 'users#update'
 
   resources :questions, only: %i[index show create]
   get '/search/questions', to: 'questions#search_question'
