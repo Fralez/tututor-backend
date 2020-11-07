@@ -24,7 +24,6 @@ class UsersController < ApplicationController
 
   def show_by_identity_number
     @user = User.find_by(identity_number: params[:identity_number])
-    byebug
 
     if @user
       render json: { user: @user.attributes.merge({ 
