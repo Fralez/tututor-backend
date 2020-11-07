@@ -24,6 +24,7 @@ class UsersController < ApplicationController
 
   def show_by_identity_number
     @user = User.find_by(identity_number: params[:identity_number])
+    byebug
 
     if @user
       render json: { user: @user.attributes.merge({ 
@@ -58,8 +59,11 @@ class UsersController < ApplicationController
   def update
     @user = User.find_by(identity_number: params[:user][:identity_number])
     if @user
-      @user.update!(user_params)
-  
+      @user.update!(params.require(:user).permit(
+        :email, :password, :identity_number, :name,
+        :gender
+      ))
+
       render json: { user: @user.as_json(except: %i[created_at updated_at]) },
              status: :created
     else
