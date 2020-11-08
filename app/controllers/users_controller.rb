@@ -70,11 +70,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroy
-    # Related to: institutions, answers, questions, channels, messages, user_question_votes, user_answer_votes, user_institution_invitations, user_saved_questions
-    @user = User.find params[:id]
-  end
-
   def clear_institution
     if @current_user
       institution = Institution.find(params[:institution_id])
